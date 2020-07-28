@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pipv3/app/modules/auth_module/repositories/auth_login_repositorie.dart';
+import 'package:pipv3/app/modules/auth_module/stores/auth_login_store.dart';
 import 'package:pipv3/app/modules/auth_module/views/auth_home_page.dart';
 import 'package:pipv3/app/modules/auth_module/views/auth_login_page.dart';
 import 'package:provider/provider.dart';
@@ -19,20 +21,20 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return //MultiProvider(
-      /*providers: [
-        /*Provider<ListaSessaoStore>(
-          create: (_) => ListaSessaoStore(ApiSessaoRepository()),
-        ),*/
-      ],*/
-      //child: 
+    return MultiProvider(
+      providers: [
+        Provider<AuthLoginStore>(
+          create: (_) => AuthLoginStore(AuthLoginRepository()),
+        ),
+      ],
+      child: 
       MaterialApp(
         localizationsDelegates: localizations,
         supportedLocales: locales,
         title: 'PIP',
         routes: routesApp,
         debugShowCheckedModeBanner: false,
-      //),
+      ),
     );
   }
 }
