@@ -2,10 +2,12 @@ import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface.
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:pipv3/app/util/failure_server_util.dart';
+import 'package:pipv3/app/util/failure_util.dart';
 
 class AuthLoginRepository extends IAuthLoginRepository {
   @override
-  Future<Either<Exception, dynamic>> signin(String user, String password) async {
+  Future<Either<FailureUtil, dynamic>> signin(String user, String password) async {
     Response response;
     Dio dio = new Dio();
     const hasuraOperation = '''
@@ -31,12 +33,12 @@ class AuthLoginRepository extends IAuthLoginRepository {
             },
           ),
           data: bodyHasura);
-          return Right(response.data);
+          return Right(response.data["data"]["signIn"]);
     } on DioError catch (e) {
-      if(e.response != null){
-        return Left(response.data);
+      if(e.type == DioErrorType.RESPONSE){
+        return Left(FailureServerUtil(message: response.data, statusCode: response.statusCode));
       }else{
-        return Left(e);
+        return Left(FailureUtil(e.message));
       }
     }
   }
