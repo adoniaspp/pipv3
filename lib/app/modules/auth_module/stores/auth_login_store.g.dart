@@ -39,11 +39,34 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     });
   }
 
+  final _$isloadingAtom = Atom(name: 'AuthLoginBase.isloading');
+
+  @override
+  bool get isloading {
+    _$isloadingAtom.reportRead();
+    return super.isloading;
+  }
+
+  @override
+  set isloading(bool value) {
+    _$isloadingAtom.reportWrite(value, super.isloading, () {
+      super.isloading = value;
+    });
+  }
+
+  final _$signinAsyncAction = AsyncAction('AuthLoginBase.signin');
+
+  @override
+  Future<void> signin(String user, String password) {
+    return _$signinAsyncAction.run(() => super.signin(user, password));
+  }
+
   @override
   String toString() {
     return '''
 userAuthModel: ${userAuthModel},
-failureUtil: ${failureUtil}
+failureUtil: ${failureUtil},
+isloading: ${isloading}
     ''';
   }
 }

@@ -1,4 +1,4 @@
-import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface.dart';
+import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface_repository.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';

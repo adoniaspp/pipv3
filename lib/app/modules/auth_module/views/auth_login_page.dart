@@ -27,7 +27,7 @@ class _AuthLoginState extends State<AuthLogin> {
     return Scaffold(
       body: Form(
         child: Observer(
-          builder: (context) => controllerLogin.userAuthModel.token == null ?
+          builder: (context) => controllerLogin.userAuthModel.token == null && controllerLogin.isloading == false ?
           Center(
             child: SingleChildScrollView(
               child: Column(
@@ -78,7 +78,9 @@ class _AuthLoginState extends State<AuthLogin> {
                 ],
               ),
             ),
-          ) : Container()
+          ) :  controllerLogin.userAuthModel.token == null && controllerLogin.isloading ?
+          Center(child: CircularProgressIndicator()) :
+          Container()
         ),
       ),
     );
