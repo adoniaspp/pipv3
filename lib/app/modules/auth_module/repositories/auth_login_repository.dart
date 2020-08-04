@@ -42,4 +42,43 @@ class AuthLoginRepository extends IAuthLoginRepository {
       }
     }
   }
+
+  @override
+  Future<Either<FailureUtil, dynamic>> refreshToken(String refreshToken, String idphone) async{
+
+    Response response;
+    Dio dio = new Dio();
+    const hasuraOperation = '''
+      mutation RefreshToken(\$idPhone: String!, \$refreshToken: String!) {
+        updateRefreshToken(idPhone: \$idPhone, refreshToken: \$refreshToken) {
+          id
+          refreshtoken
+          token
+        }
+      }        
+        ''';
+    final variables = {
+      "idPhone": idphone.toString(),
+      "refreshToken": refreshToken.toString()
+    };
+    final bodyHasura =
+        json.encode({"query": hasuraOperation, "variables": variables});
+    try {
+      response = await dio.post("http://localhost:8080/v1/graphql",
+          options: Options(
+            headers: {
+              "content-type": "application/json",
+            },
+          ),
+          data: bodyHasura);
+          return Right(response.data["data"]["updateRefreshToken"]);
+    } on DioError catch (e) {
+      if(e.type == DioErrorType.RESPONSE){
+        return Left(FailureServerUtil(message: response.data, statusCode: response.statusCode));
+      }else{
+        return Left(FailureUtil(e.message));
+      }
+    }
+
+  }
 }

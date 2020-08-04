@@ -35,7 +35,7 @@ abstract class AuthLoginBase with Store {
       failureUtil = e;  
     }, (data) {
       TimerUtil().startTimeOut();
-      sharedPreferenceService.saveUserAuthData(data["refreshtoken"]);
+      sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data); 
     });
     isloading = false;
