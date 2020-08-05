@@ -61,6 +61,13 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     return _$signinAsyncAction.run(() => super.signin(user, password));
   }
 
+  final _$refreshTokenAsyncAction = AsyncAction('AuthLoginBase.refreshToken');
+
+  @override
+  Future<void> refreshToken() {
+    return _$refreshTokenAsyncAction.run(() => super.refreshToken());
+  }
+
   @override
   String toString() {
     return '''
