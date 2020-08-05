@@ -12,7 +12,7 @@ class SharedPreferenceService extends ISharedPreferenceService{
   }
 
   @override
-  Future<String> getRefreshToken(String refreshToken) async{
+  Future<String> getRefreshToken() async{
     prefs = await SharedPreferences.getInstance();
     return prefs.getString("refreshToken");
   }
