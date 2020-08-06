@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
+import 'dart:async';
 import 'package:mobx/mobx.dart';
 import 'package:pipv3/app/models/user_auth_model.dart';
 import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface_repository.dart';
 import 'package:pipv3/app/services/shared_preference_interface_service.dart';
 import 'package:pipv3/app/util/failure_util.dart';
-import 'package:pipv3/app/util/timer_util.dart';
 import 'package:device_info/device_info.dart';
 
 part 'auth_login_store.g.dart';
@@ -18,6 +17,9 @@ abstract class AuthLoginBase with Store {
 
   @observable
   FailureUtil failureUtil;
+
+  @observable
+  Timer timeout;
 
   @observable
   bool isloading = false;
@@ -35,7 +37,7 @@ abstract class AuthLoginBase with Store {
     result.fold((e){
       failureUtil = e;  
     }, (data) {
-      TimerUtil().startTimeOut();
+      timeout = _startTimeOut();
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data); 
     });
@@ -45,6 +47,7 @@ abstract class AuthLoginBase with Store {
   @action
   Future<void> refreshToken() async
   { 
+    timeout.cancel();
     String refreshToken;
     //obter refresh token
     sharedPreferenceService.getRefreshToken().then((value) => {
@@ -60,10 +63,16 @@ abstract class AuthLoginBase with Store {
     result.fold((e){
       failureUtil = e;  
     }, (data) {
-      TimerUtil().startTimeOut();
+      timeout = _startTimeOut();
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data); 
     });
-    isloading = false;
+  }
+  _startTimeOut()
+  {
+    final duration = const Duration(minutes: 1);
+    return Timer(duration, (){
+      refreshToken();
+    });
   }
 }

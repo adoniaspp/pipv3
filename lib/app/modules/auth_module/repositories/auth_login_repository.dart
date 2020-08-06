@@ -26,7 +26,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
     final bodyHasura =
         json.encode({"query": hasuraOperation, "variables": variables});
     try {
-      response = await dio.post("http://localhost:8080/v1/graphql",
+      response = await dio.post("http://192.168.100.4:8080/v1/graphql",
           options: Options(
             headers: {
               "content-type": "application/json",
@@ -45,26 +45,26 @@ class AuthLoginRepository extends IAuthLoginRepository {
 
   @override
   Future<Either<FailureUtil, dynamic>> refreshToken(String refreshToken, String idphone) async{
-
+    idphone = "76";
     Response response;
     Dio dio = new Dio();
     const hasuraOperation = '''
-      mutation RefreshToken(\$idPhone: String!, \$refreshToken: String!) {
-        updateRefreshToken(idPhone: \$idPhone, refreshToken: \$refreshToken) {
+      mutation RefreshToken(\$id_phone: String!, \$refresh_token: String!) {
+        updateRefreshToken(id_phone: \$id_phone, refresh_token: \$refresh_token) {
           id
           refreshtoken
           token
         }
-      }        
+      }       
         ''';
     final variables = {
-      "idPhone": idphone.toString(),
-      "refreshToken": refreshToken.toString()
+      "id_phone": idphone.toString(),
+      "refresh_token": refreshToken.toString()
     };
     final bodyHasura =
         json.encode({"query": hasuraOperation, "variables": variables});
     try {
-      response = await dio.post("http://localhost:8080/v1/graphql",
+      response = await dio.post("http://192.168.100.4:8080/v1/graphql",
           options: Options(
             headers: {
               "content-type": "application/json",
