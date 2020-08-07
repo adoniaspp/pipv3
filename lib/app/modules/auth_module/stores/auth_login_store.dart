@@ -24,9 +24,11 @@ abstract class AuthLoginBase with Store {
   @observable
   bool isloading = false;
 
-  final IAuthLoginRepository authLogin;
+  IAuthLoginRepository authLogin;
 
-  final ISharedPreferenceService sharedPreferenceService;
+  ISharedPreferenceService sharedPreferenceService;
+
+  AuthLoginBase.start(this.sharedPreferenceService);
 
   AuthLoginBase(this.authLogin, this.sharedPreferenceService);
 
@@ -68,11 +70,18 @@ abstract class AuthLoginBase with Store {
       userAuthModel = UserAuthModel.fromJsonSigin(data); 
     });
   }
+
   _startTimeOut()
   {
     final duration = const Duration(minutes: 1);
     return Timer(duration, (){
       refreshToken();
+    });
+  }
+
+  Future<String> getRefreshToken() async{
+    await sharedPreferenceService.getRefreshToken().then((value) {
+      print(value);
     });
   }
 }
