@@ -11,7 +11,6 @@ part 'auth_login_store.g.dart';
 class AuthLoginStore = AuthLoginBase with _$AuthLoginStore;
 
 abstract class AuthLoginBase with Store {
-
   @observable
   UserAuthModel userAuthModel = UserAuthModel();
 
@@ -33,55 +32,67 @@ abstract class AuthLoginBase with Store {
   AuthLoginBase(this.authLogin, this.sharedPreferenceService);
 
   @action
-  Future<void> signin(String user, String password) async{
+  Future<void> signin(String user, String password) async {
     isloading = true;
     final result = await authLogin.signin(user, password);
-    result.fold((e){
-      failureUtil = e;  
+    result.fold((e) {
+      failureUtil = e;
     }, (data) {
       timeout = _startTimeOut();
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
-      userAuthModel = UserAuthModel.fromJsonSigin(data); 
+      userAuthModel = UserAuthModel.fromJsonSigin(data);
     });
     isloading = false;
   }
 
   @action
-  Future<void> refreshToken() async
-  { 
+  Future<void> refreshToken() async {
     timeout.cancel();
-    String refreshToken;
+    String refreshToken = "";
     //obter refresh token
-    sharedPreferenceService.getRefreshToken().then((value) => {
-      refreshToken = value
-    });
-    //obter idphone
-    String idphone;
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    idphone = androidInfo.androidId;
+    sharedPreferenceService
+        .getRefreshToken()
+        .then((value) => {refreshToken = value});
+    if (refreshToken != "") {
+      //obter idphone
+      String idphone;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      idphone = androidInfo.androidId;
 
-    final result = await authLogin.refreshToken(refreshToken, idphone);
-    result.fold((e){
-      failureUtil = e;  
-    }, (data) {
-      timeout = _startTimeOut();
-      sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
-      userAuthModel = UserAuthModel.fromJsonSigin(data); 
-    });
+      final result = await authLogin.refreshToken(refreshToken, idphone);
+      result.fold((e) {
+        failureUtil = e;
+      }, (data) {
+        timeout = _startTimeOut();
+        sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
+        userAuthModel = UserAuthModel.fromJsonSigin(data);
+      });
+    }
   }
 
-  _startTimeOut()
-  {
+  @action
+  Future<void> signUp(String username, String password) async {
+      //obter idphone
+      String idphone;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      idphone = androidInfo.androidId;
+
+      final result = await authLogin.signUp(username, password, idphone);
+      result.fold((e) {
+        failureUtil = e;
+      }, (data) {
+        timeout = _startTimeOut();
+        sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
+        userAuthModel = UserAuthModel.fromJsonSigin(data);
+      });
+  }
+
+  _startTimeOut() {
     final duration = const Duration(minutes: 1);
-    return Timer(duration, (){
+    return Timer(duration, () {
       refreshToken();
-    });
-  }
-
-  Future<String> getRefreshToken() async{
-    await sharedPreferenceService.getRefreshToken().then((value) {
-      print(value);
     });
   }
 }

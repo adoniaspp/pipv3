@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:pipv3/app/view_components/button_component.dart';
 
 class AuthHomePage extends StatelessWidget {
   @override
@@ -55,6 +56,16 @@ class AuthHomePage extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20))),
                 onPressed: () {},
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ButtonComponent(
+                icon: Icon(Icons.lock_open),
+                action: () {
+                  Navigator.pushNamed(context, "/signup");
+                },
+                label: Text("Cadastrar"),
               ),
             ],
           ),

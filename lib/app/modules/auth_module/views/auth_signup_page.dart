@@ -5,25 +5,28 @@ import 'package:pipv3/app/view_components/button_component.dart';
 import 'package:pipv3/app/view_components/text_field_component.dart';
 import 'package:provider/provider.dart';
 
-class AuthLogin extends StatefulWidget {
+class AuthSignup extends StatefulWidget {
   @override
-  _AuthLoginState createState() => _AuthLoginState();
+  _AuthSignupState createState() => _AuthSignupState();
 }
 
-class _AuthLoginState extends State<AuthLogin> {
+class _AuthSignupState extends State<AuthSignup> {
   final userController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordRepeatController = TextEditingController();
 
   @override
   void dispose() {
     userController.dispose();
     passwordController.dispose();
+    passwordRepeatController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final controllerLogin = Provider.of<AuthLoginStore>(context);
+
     return Scaffold(
       body: Form(
         child: Observer(
@@ -33,7 +36,7 @@ class _AuthLoginState extends State<AuthLogin> {
               child: Column(
                 children: [
                   TextFieldComponent(
-                    label: "Usuário",
+                    label: "Nome de Usuário",
                     controller: userController,
                   ),
                   SizedBox(
@@ -44,18 +47,13 @@ class _AuthLoginState extends State<AuthLogin> {
                     isHide: true,
                     controller: passwordController,
                   ),
-                  Row(
-                    children: [
-                      FlatButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Esqueceu o usuário ou a senha?",
-                            style: TextStyle(
-                              color: Colors.red,
-                              decoration: TextDecoration.underline,
-                            ),
-                          )),
-                    ],
+                   SizedBox(
+                    height: 20,
+                  ),
+                  TextFieldComponent(
+                    label: "Repita a Senha",
+                    isHide: true,
+                    controller: passwordRepeatController,
                   ),
                   SizedBox(
                     height: 20,
@@ -63,17 +61,9 @@ class _AuthLoginState extends State<AuthLogin> {
                   ButtonComponent(
                     icon: Icon(Icons.lock_open),
                     action: () {
-                      controllerLogin.signin(userController.text, passwordController.text);
+                      controllerLogin.signUp(userController.text, passwordController.text);
                     },
-                    label: Text("Entrar"),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ButtonComponent(
-                    icon: Icon(Icons.person_add),
-                    action: () {},
-                    label: Text("Não tem conta? Cadastre-se!"),
+                    label: Text("Cadastrar"),
                   ),
                 ],
               ),
