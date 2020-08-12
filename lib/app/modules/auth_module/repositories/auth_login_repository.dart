@@ -45,7 +45,6 @@ class AuthLoginRepository extends IAuthLoginRepository {
 
   @override
   Future<Either<FailureUtil, dynamic>> refreshToken(String refreshToken, String idphone) async{
-    idphone = "76";
     Response response;
     Dio dio = new Dio();
     const hasuraOperation = '''
@@ -118,5 +117,11 @@ class AuthLoginRepository extends IAuthLoginRepository {
         return Left(FailureUtil(e.message));
       }
     }
+  }
+
+  @override
+  Future verifyUsername(String username) {
+    
+    throw UnimplementedError();
   }
 }

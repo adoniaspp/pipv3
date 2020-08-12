@@ -39,21 +39,6 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     });
   }
 
-  final _$timeoutAtom = Atom(name: 'AuthLoginBase.timeout');
-
-  @override
-  Timer get timeout {
-    _$timeoutAtom.reportRead();
-    return super.timeout;
-  }
-
-  @override
-  set timeout(Timer value) {
-    _$timeoutAtom.reportWrite(value, super.timeout, () {
-      super.timeout = value;
-    });
-  }
-
   final _$isloadingAtom = Atom(name: 'AuthLoginBase.isloading');
 
   @override
@@ -95,7 +80,6 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     return '''
 userAuthModel: ${userAuthModel},
 failureUtil: ${failureUtil},
-timeout: ${timeout},
 isloading: ${isloading}
     ''';
   }

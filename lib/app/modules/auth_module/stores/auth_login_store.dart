@@ -18,9 +18,6 @@ abstract class AuthLoginBase with Store {
   FailureUtil failureUtil;
 
   @observable
-  Timer timeout;
-
-  @observable
   bool isloading = false;
 
   IAuthLoginRepository authLogin;
@@ -38,7 +35,10 @@ abstract class AuthLoginBase with Store {
     result.fold((e) {
       failureUtil = e;
     }, (data) {
-      timeout = _startTimeOut();
+      _startTimeOut();
+      Timer(const Duration(seconds: 30), () {
+        refreshToken();
+      });
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data);
     });
@@ -47,10 +47,9 @@ abstract class AuthLoginBase with Store {
 
   @action
   Future<void> refreshToken() async {
-    timeout.cancel();
-    String refreshToken = "";
+    String refreshToken;
     //obter refresh token
-    sharedPreferenceService
+    await sharedPreferenceService
         .getRefreshToken()
         .then((value) => {refreshToken = value});
     if (refreshToken != "") {
@@ -64,7 +63,7 @@ abstract class AuthLoginBase with Store {
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        timeout = _startTimeOut();
+        _startTimeOut();
         sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
         userAuthModel = UserAuthModel.fromJsonSigin(data);
       });
@@ -83,15 +82,15 @@ abstract class AuthLoginBase with Store {
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        timeout = _startTimeOut();
+        print(data);
+        _startTimeOut();
         sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
         userAuthModel = UserAuthModel.fromJsonSigin(data);
       });
   }
 
   _startTimeOut() {
-    final duration = const Duration(minutes: 1);
-    return Timer(duration, () {
+    Timer(const Duration(seconds: 30), () {
       refreshToken();
     });
   }
