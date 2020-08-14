@@ -38,13 +38,6 @@ class AuthLoginRepository extends IAuthLoginRepository {
                 message: value["message"], statusCode: value["code"])))
         .catchError((e) => Left(
             FailureServerUtil(message: e["message"], statusCode: e["code"])));
-    /*} on DioError catch (e) {
-      if(e.type == DioErrorType.RESPONSE){
-        return Left(FailureServerUtil(message: response.data, statusCode: response.statusCode));
-      }else{
-        return Left(FailureUtil(e.message));
-      }
-    }*/
   }
 
   @override
@@ -66,15 +59,12 @@ class AuthLoginRepository extends IAuthLoginRepository {
 
     return await hasuraConnect
         .mutation(hasuraOperation, variables: variables)
-        .then((value) => Right(value["data"]["updateRefreshToken"]));
-
-    /*} on DioError catch (e) {
-      if(e.type == DioErrorType.RESPONSE){
-        return Left(FailureServerUtil(message: response.data, statusCode: response.statusCode));
-      }else{
-        return Left(FailureUtil(e.message));
-      }
-    }*/
+        .then((value) => value["data"]["updateRefreshToken"] != null
+            ? Right(value["data"]["updateRefreshToken"])
+            : Left(FailureServerUtil(
+                message: value["message"], statusCode: value["code"])))
+        .catchError((e) => Left(
+            FailureServerUtil(message: e["message"], statusCode: e["code"])));
   }
 
   @override
@@ -97,15 +87,12 @@ class AuthLoginRepository extends IAuthLoginRepository {
 
     return await hasuraConnect
         .mutation(hasuraOperation, variables: variables)
-        .then((value) => Right(value["data"]["signUp"]));
-
-/*    } on DioError catch (e) {
-      if(e.type == DioErrorType.RESPONSE){
-        return Left(FailureServerUtil(message: response.data, statusCode: response.statusCode));
-      }else{
-        return Left(FailureUtil(e.message));
-      }
-    }*/
+        .then((value) => value["data"]["signUp"] != null
+            ? Right(value["data"]["signUp"])
+            : Left(FailureServerUtil(
+                message: value["message"], statusCode: value["code"])))
+        .catchError((e) => Left(
+            FailureServerUtil(message: e["message"], statusCode: e["code"])));
   }
 
   @override
