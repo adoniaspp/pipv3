@@ -36,9 +36,6 @@ abstract class AuthLoginBase with Store {
       failureUtil = e;
     }, (data) {
       _startTimeOut();
-      Timer(const Duration(seconds: 30), () {
-        refreshToken();
-      });
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data);
     });
