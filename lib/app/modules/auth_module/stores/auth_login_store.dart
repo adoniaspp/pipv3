@@ -79,12 +79,23 @@ abstract class AuthLoginBase with Store {
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        print(data);
         _startTimeOut();
         sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
         userAuthModel = UserAuthModel.fromJsonSigin(data);
       });
   }
+
+  @action
+  Future<void> verifyUsername(String username) async {
+    final result = await authLogin.verifyUsername(username);
+      result.fold((e) {
+        failureUtil = e;
+      }, (data) {
+        _startTimeOut();
+        sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
+        userAuthModel = UserAuthModel.fromJsonSigin(data);
+      });
+  } 
 
   _startTimeOut() {
     Timer(const Duration(seconds: 30), () {

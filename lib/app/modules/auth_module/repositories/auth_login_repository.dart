@@ -1,6 +1,5 @@
 import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface_repository.dart';
 import 'package:hasura_connect/hasura_connect.dart';
-import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:pipv3/app/util/failure_server_util.dart';
 import 'package:pipv3/app/util/failure_util.dart';
@@ -30,14 +29,13 @@ class AuthLoginRepository extends IAuthLoginRepository {
       "password": password.toString()
     };
 
-    return await hasuraConnect
-        .mutation(hasuraOperation, variables: variables)
-        .then((value) => value["data"]["signIn"] != null
-            ? Right(value["data"]["signIn"])
-            : Left(FailureServerUtil(
-                message: value["message"], statusCode: value["code"])))
-        .catchError((e) => Left(
-            FailureServerUtil(message: e["message"], statusCode: e["code"])));
+    try{
+      final response = await hasuraConnect
+        .mutation(hasuraOperation, variables: variables);
+        return Right(response["data"]["signIn"]);
+    }on HasuraError catch(e){
+      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+    }
   }
 
   @override
@@ -57,14 +55,13 @@ class AuthLoginRepository extends IAuthLoginRepository {
       "refresh_token": refreshToken.toString()
     };
 
-    return await hasuraConnect
-        .mutation(hasuraOperation, variables: variables)
-        .then((value) => value["data"]["updateRefreshToken"] != null
-            ? Right(value["data"]["updateRefreshToken"])
-            : Left(FailureServerUtil(
-                message: value["message"], statusCode: value["code"])))
-        .catchError((e) => Left(
-            FailureServerUtil(message: e["message"], statusCode: e["code"])));
+    try{
+      final response = await hasuraConnect
+        .mutation(hasuraOperation, variables: variables);
+        return Right(response["data"]["updateRefreshToken"]);
+    }on HasuraError catch(e){
+      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+    }
   }
 
   @override
@@ -80,23 +77,42 @@ class AuthLoginRepository extends IAuthLoginRepository {
     }       
     ''';
     final variables = {
-      "user": userName.toString(),
+      "user": userName.toString(),  
       "id_phone": idphone.toString(),
       "password": password.toString()
     };
 
-    return await hasuraConnect
-        .mutation(hasuraOperation, variables: variables)
-        .then((value) => value["data"]["signUp"] != null
-            ? Right(value["data"]["signUp"])
-            : Left(FailureServerUtil(
-                message: value["message"], statusCode: value["code"])))
-        .catchError((e) => Left(
-            FailureServerUtil(message: e["message"], statusCode: e["code"])));
+    try{
+      final response = await hasuraConnect
+        .mutation(hasuraOperation, variables: variables);
+        return Right(response["data"]["signUp"]);
+    }on HasuraError catch(e){
+      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+    }
+            
   }
 
   @override
-  Future verifyUsername(String username) {
-    throw UnimplementedError();
+  Future<Either<FailureUtil, dynamic>> verifyUsername(String username) async {
+    const hasuraOperation = '''
+      query VerifyUser(\$username: String!) {
+          user(where: {user: {_eq: \$username}}) {
+          user
+        }
+      }
+    }       
+    ''';
+    final variables = {
+      "username": username
+    };
+
+    try{
+      final response = await hasuraConnect
+        .query(hasuraOperation, variables: variables);
+        return Right(response["data"]["user"]);
+    }on HasuraError catch(e){
+      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+    }
+          
   }
 }
