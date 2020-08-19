@@ -57,8 +57,8 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
   final _$signinAsyncAction = AsyncAction('AuthLoginBase.signin');
 
   @override
-  Future<void> signin(String user, String password) {
-    return _$signinAsyncAction.run(() => super.signin(user, password));
+  Future<void> signin(String user, String password, BuildContext context) {
+    return _$signinAsyncAction.run(() => super.signin(user, password, context));
   }
 
   final _$refreshTokenAsyncAction = AsyncAction('AuthLoginBase.refreshToken');
@@ -73,6 +73,15 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
   @override
   Future<void> signUp(String username, String password) {
     return _$signUpAsyncAction.run(() => super.signUp(username, password));
+  }
+
+  final _$verifyUsernameAsyncAction =
+      AsyncAction('AuthLoginBase.verifyUsername');
+
+  @override
+  Future<bool> verifyUsername(String username) {
+    return _$verifyUsernameAsyncAction
+        .run(() => super.verifyUsername(username));
   }
 
   @override

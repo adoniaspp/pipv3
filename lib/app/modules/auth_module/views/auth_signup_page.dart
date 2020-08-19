@@ -14,6 +14,7 @@ class _AuthSignupState extends State<AuthSignup> {
   final userController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordRepeatController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -26,52 +27,67 @@ class _AuthSignupState extends State<AuthSignup> {
   @override
   Widget build(BuildContext context) {
     final controllerLogin = Provider.of<AuthLoginStore>(context);
-
     return Scaffold(
       body: Form(
+        key: _formKey,
         child: Observer(
-          builder: (context) => controllerLogin.userAuthModel.token == null && controllerLogin.isloading == false ?
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TextFieldComponent(
-                    label: "Nome de Usuário",
-                    controller: userController,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFieldComponent(
-                    label: "Senha",
-                    isHide: true,
-                    controller: passwordController,
-                  ),
-                   SizedBox(
-                    height: 20,
-                  ),
-                  TextFieldComponent(
-                    label: "Repita a Senha",
-                    isHide: true,
-                    controller: passwordRepeatController,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ButtonComponent(
-                    icon: Icon(Icons.lock_open),
-                    action: () {
-                      controllerLogin.signUp(userController.text, passwordController.text);
-                    },
-                    label: Text("Cadastrar"),
-                  ),
-                ],
-              ),
-            ),
-          ) :  controllerLogin.userAuthModel.token == null && controllerLogin.isloading ?
-          Center(child: CircularProgressIndicator()) :
-          Container()
-        ),
+            builder: (context) => controllerLogin.userAuthModel.token == null &&
+                    controllerLogin.isloading == false
+                ? Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          TextFieldComponent(
+                            validator: () {
+                              controllerLogin
+                                  .verifyUsername(userController.text)
+                                  .then((value) {
+                                if (value) {
+                                  return 'Usuário já existe!';
+                                }
+                                return null;
+                              });
+                            },
+                            label: "Nome de Usuário",
+                            controller: userController,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFieldComponent(
+                            label: "Senha",
+                            isHide: true,
+                            controller: passwordController,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFieldComponent(
+                            label: "Repita a Senha",
+                            isHide: true,
+                            controller: passwordRepeatController,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ButtonComponent(
+                            icon: Icon(Icons.lock_open),
+                            action: () {
+                              if (_formKey.currentState.validate()) {
+                                controllerLogin.signUp(userController.text,
+                                    passwordController.text);
+                              }
+                            },
+                            label: Text("Cadastrar"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : controllerLogin.userAuthModel.token == null &&
+                        controllerLogin.isloading
+                    ? Center(child: CircularProgressIndicator())
+                    : Container()),
       ),
     );
   }

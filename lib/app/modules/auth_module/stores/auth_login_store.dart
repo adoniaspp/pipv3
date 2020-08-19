@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:pipv3/app/models/user_auth_model.dart';
 import 'package:pipv3/app/modules/auth_module/repositories/auth_login_interface_repository.dart';
@@ -29,17 +30,20 @@ abstract class AuthLoginBase with Store {
   AuthLoginBase(this.authLogin, this.sharedPreferenceService);
 
   @action
-  Future<void> signin(String user, String password) async {
+  Future<void> signin(String user, String password, BuildContext context) async {
     isloading = true;
     final result = await authLogin.signin(user, password);
     result.fold((e) {
+      isloading = false;
       failureUtil = e;
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Usuário ou senha inválidos!')));
     }, (data) {
+      isloading = false;
       _startTimeOut();
       sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
       userAuthModel = UserAuthModel.fromJsonSigin(data);
+      Navigator.pushNamed(context, "/");
     });
-    isloading = false;
   }
 
   @action
@@ -86,14 +90,16 @@ abstract class AuthLoginBase with Store {
   }
 
   @action
-  Future<void> verifyUsername(String username) async {
+  Future<bool> verifyUsername(String username) async {
     final result = await authLogin.verifyUsername(username);
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        _startTimeOut();
-        sharedPreferenceService.saveRefreshToken(data["refreshtoken"]);
-        userAuthModel = UserAuthModel.fromJsonSigin(data);
+        if(data["user"]){
+          return true;
+        }else{
+          return false;
+        }
       });
   } 
 
