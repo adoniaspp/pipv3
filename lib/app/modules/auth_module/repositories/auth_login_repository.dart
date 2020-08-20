@@ -95,12 +95,11 @@ class AuthLoginRepository extends IAuthLoginRepository {
   @override
   Future<Either<FailureUtil, dynamic>> verifyUsername(String username) async {
     const hasuraOperation = '''
-      query VerifyUser(\$username: String!) {
+      query MyQuery(\$username: String!) {
           user(where: {user: {_eq: \$username}}) {
           user
         }
-      }
-    }       
+      }    
     ''';
     final variables = {
       "username": username
@@ -109,7 +108,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
     try{
       final response = await hasuraConnect
         .query(hasuraOperation, variables: variables);
-        return Right(response["data"]["user"]);
+        return Right(response["data"]["user"][0]);  //Corrigir quando não retorna dados.
     }on HasuraError catch(e){
       return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }

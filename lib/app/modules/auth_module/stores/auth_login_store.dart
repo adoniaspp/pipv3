@@ -21,6 +21,9 @@ abstract class AuthLoginBase with Store {
   @observable
   bool isloading = false;
 
+  @observable
+  bool usernameCheck = false;
+
   IAuthLoginRepository authLogin;
 
   ISharedPreferenceService sharedPreferenceService;
@@ -90,15 +93,13 @@ abstract class AuthLoginBase with Store {
   }
 
   @action
-  Future<bool> verifyUsername(String username) async {
+  Future<void> verifyUsername(String username) async {
     final result = await authLogin.verifyUsername(username);
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        if(data["user"]){
-          return true;
-        }else{
-          return false;
+        if(data["user"] == username){
+          usernameCheck = true;
         }
       });
   } 
@@ -109,3 +110,4 @@ abstract class AuthLoginBase with Store {
     });
   }
 }
+

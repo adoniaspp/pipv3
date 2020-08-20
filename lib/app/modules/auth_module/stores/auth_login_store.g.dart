@@ -54,6 +54,21 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     });
   }
 
+  final _$usernameCheckAtom = Atom(name: 'AuthLoginBase.usernameCheck');
+
+  @override
+  bool get usernameCheck {
+    _$usernameCheckAtom.reportRead();
+    return super.usernameCheck;
+  }
+
+  @override
+  set usernameCheck(bool value) {
+    _$usernameCheckAtom.reportWrite(value, super.usernameCheck, () {
+      super.usernameCheck = value;
+    });
+  }
+
   final _$signinAsyncAction = AsyncAction('AuthLoginBase.signin');
 
   @override
@@ -79,7 +94,7 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
       AsyncAction('AuthLoginBase.verifyUsername');
 
   @override
-  Future<bool> verifyUsername(String username) {
+  Future<void> verifyUsername(String username) {
     return _$verifyUsernameAsyncAction
         .run(() => super.verifyUsername(username));
   }
@@ -89,7 +104,8 @@ mixin _$AuthLoginStore on AuthLoginBase, Store {
     return '''
 userAuthModel: ${userAuthModel},
 failureUtil: ${failureUtil},
-isloading: ${isloading}
+isloading: ${isloading},
+usernameCheck: ${usernameCheck}
     ''';
   }
 }

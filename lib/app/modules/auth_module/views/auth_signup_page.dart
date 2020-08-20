@@ -38,15 +38,11 @@ class _AuthSignupState extends State<AuthSignup> {
                       child: Column(
                         children: [
                           TextFieldComponent(
-                            validator: () {
-                              controllerLogin
-                                  .verifyUsername(userController.text)
-                                  .then((value) {
-                                if (value) {
-                                  return 'Usuário já existe!';
-                                }
-                                return null;
-                              });
+                            validator: (value) {
+                              if (controllerLogin.usernameCheck) {
+                                return "Usuário já existe!";
+                              }
+                              return null;
                             },
                             label: "Nome de Usuário",
                             controller: userController,
@@ -72,7 +68,8 @@ class _AuthSignupState extends State<AuthSignup> {
                           ),
                           ButtonComponent(
                             icon: Icon(Icons.lock_open),
-                            action: () {
+                            action: () async {
+                              var response = await controllerLogin.verifyUsername(userController.text);
                               if (_formKey.currentState.validate()) {
                                 controllerLogin.signUp(userController.text,
                                     passwordController.text);
