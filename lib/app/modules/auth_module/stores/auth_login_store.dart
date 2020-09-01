@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:pipv3/app/models/user_auth_model.dart';
@@ -57,11 +58,16 @@ abstract class AuthLoginBase with Store {
         .getRefreshToken()
         .then((value) => {refreshToken = value});
     if (refreshToken != "") {
-      //obter idphone
       String idphone;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      idphone = androidInfo.androidId;
+      if(Platform.isAndroid)
+      {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        idphone = androidInfo.androidId;
+      }else
+      {
+        idphone = "";
+      }
 
       final result = await authLogin.refreshToken(refreshToken, idphone);
       result.fold((e) {
@@ -76,12 +82,17 @@ abstract class AuthLoginBase with Store {
 
   @action
   Future<void> signUp(String username, String password) async {
-      //obter idphone
       String idphone;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      idphone = androidInfo.androidId;
-
+      if(Platform.isAndroid)
+      {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        idphone = androidInfo.androidId;
+      }else
+      {
+        idphone = "";
+      }
+      
       final result = await authLogin.signUp(username, password, idphone);
       result.fold((e) {
         failureUtil = e;
@@ -98,7 +109,9 @@ abstract class AuthLoginBase with Store {
       result.fold((e) {
         failureUtil = e;
       }, (data) {
-        if(data["user"] == username){
+        if(!data){
+          usernameCheck = false;
+        }else if(data["user"] == username){
           usernameCheck = true;
         }
       });

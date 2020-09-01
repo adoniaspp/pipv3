@@ -108,7 +108,11 @@ class AuthLoginRepository extends IAuthLoginRepository {
     try{
       final response = await hasuraConnect
         .query(hasuraOperation, variables: variables);
-        return Right(response["data"]["user"][0]);  //Corrigir quando não retorna dados.
+        if(response["data"]["user"].toString() == "[]"){
+           return Right(false);          
+        }else{
+          return Right(response["data"]["user"][0]);  //Corrigir quando não retorna dados.
+        }
     }on HasuraError catch(e){
       return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }

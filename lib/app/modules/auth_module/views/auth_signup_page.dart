@@ -39,6 +39,10 @@ class _AuthSignupState extends State<AuthSignup> {
                         children: [
                           TextFieldComponent(
                             validator: (value) {
+                              if(value.toString().isEmpty)
+                              {
+                                return "Forneça um nome de usuário válido!";
+                              }
                               if (controllerLogin.usernameCheck) {
                                 return "Usuário já existe!";
                               }
@@ -54,6 +58,14 @@ class _AuthSignupState extends State<AuthSignup> {
                             label: "Senha",
                             isHide: true,
                             controller: passwordController,
+                            validator: (value){
+                              if(value.toString().isEmpty){
+                                return "Forneça uma senha válida!";
+                              }
+                              if(value.toString().length < 7){
+                                return "Senha deve possuir mais de 6 caracteres!";
+                              }
+                            },
                           ),
                           SizedBox(
                             height: 20,
@@ -62,6 +74,15 @@ class _AuthSignupState extends State<AuthSignup> {
                             label: "Repita a Senha",
                             isHide: true,
                             controller: passwordRepeatController,
+                            validator: (value){
+                              if(value.toString().isEmpty){
+                                return "Repita novamente a senha aqui!";
+                              }
+                              if(passwordController.text.isNotEmpty && passwordController.text != passwordRepeatController.text)
+                              {
+                                return "Senhas fornecidas não são iguais!";
+                              }
+                            },
                           ),
                           SizedBox(
                             height: 20,
@@ -69,7 +90,9 @@ class _AuthSignupState extends State<AuthSignup> {
                           ButtonComponent(
                             icon: Icon(Icons.lock_open),
                             action: () async {
-                              var response = await controllerLogin.verifyUsername(userController.text);
+                              if(userController.text.isNotEmpty){
+                                 var response = await controllerLogin.verifyUsername(userController.text);
+                              }
                               if (_formKey.currentState.validate()) {
                                 controllerLogin.signUp(userController.text,
                                     passwordController.text);
