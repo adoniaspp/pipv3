@@ -34,7 +34,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
         .mutation(hasuraOperation, variables: variables);
         return Right(response["data"]["signIn"]);
     }on HasuraError catch(e){
-      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+      //return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }
   }
 
@@ -60,7 +60,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
         .mutation(hasuraOperation, variables: variables);
         return Right(response["data"]["updateRefreshToken"]);
     }on HasuraError catch(e){
-      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+      //return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }
   }
 
@@ -87,7 +87,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
         .mutation(hasuraOperation, variables: variables);
         return Right(response["data"]["signUp"]);
     }on HasuraError catch(e){
-      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+      //return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }
             
   }
@@ -114,7 +114,7 @@ class AuthLoginRepository extends IAuthLoginRepository {
           return Right(response["data"]["user"][0]);  //Corrigir quando não retorna dados.
         }
     }on HasuraError catch(e){
-      return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
+      //return Left(FailureServerUtil(message: e.message,statusCode: e.extensions.code));
     }
           
   }

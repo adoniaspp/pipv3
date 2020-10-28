@@ -33,7 +33,7 @@ dependencies:
   mobx: ^1.2.1+1
   flutter_mobx: ^1.1.0+1
   provider: ^4.0.5
-  hasura_connect: ^1.2.2+1
+  hasura_connect: ^2.0.0
   animations: ^1.0.0+5
   splashscreen: ^1.2.0
   flutter_signin_button: ^1.0.0
