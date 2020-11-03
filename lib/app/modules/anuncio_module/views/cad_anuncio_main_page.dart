@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class RegistrarAnuncio extends StatefulWidget {
+import 'cad_anuncio_tipo_anuncio_page.dart';
+
+class CadAnuncioMain extends StatefulWidget {
   @override
-  _RegistrarAnuncioState createState() => _RegistrarAnuncioState();
+  _CadAnuncioMainState createState() => _CadAnuncioMainState();
 }
 
-class _RegistrarAnuncioState extends State<RegistrarAnuncio> {
+class _CadAnuncioMainState extends State<CadAnuncioMain> {
   int index = 0;
 
   void _next() {
@@ -30,9 +32,17 @@ class _RegistrarAnuncioState extends State<RegistrarAnuncio> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        bottom: AppBar(
+          leading: Icon(Icons.text_snippet, color: Colors.black54,),
+          title: Text(
+            "Tipo de Anúncio",
+            style: TextStyle(color: Colors.black54),
+          ),
+          backgroundColor: Colors.grey[300],
+        ),
         title: Text("Cadastro de Anúncio"),
       ),
-      body: Container(),
+      body: CadAnuncioTipoAnuncio(),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           child: Row(
@@ -41,14 +51,13 @@ class _RegistrarAnuncioState extends State<RegistrarAnuncio> {
               TextButton.icon(
                 icon: Icon(Icons.arrow_back),
                 label: Text("Anterior"),
-                onPressed: (){},
+                onPressed: () {},
               ),
               Text("Etapa 1 de 4"),
               TextButton.icon(
                 icon: Icon(Icons.arrow_forward),
                 label: Text("Próximo"),
-                onPressed: (){},
-
+                onPressed: () {},
               ),
             ],
           ),
@@ -56,23 +65,6 @@ class _RegistrarAnuncioState extends State<RegistrarAnuncio> {
         ),
         elevation: 50,
       ),
-      /*bottomNavigationBar: 
-      BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_back),
-            label: "Anterior"
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_back),
-            label: "Anterior"
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_forward),
-            label: "Próximo"
-          )
-        ],
-      ),*/
     );
   }
 }

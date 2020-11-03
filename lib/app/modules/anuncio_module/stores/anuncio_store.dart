@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:pipv3/app/modules/auth_module/repositories/address_interface_repository.dart';
+import 'package:pipv3/app/modules/anuncio_module/repositories/address_interface_repository.dart';
 
 part 'anuncio_store.g.dart';
 

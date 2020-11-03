@@ -1,4 +1,4 @@
-import 'package:pipv3/app/modules/auth_module/repositories/address_interface_repository.dart';
+import 'package:pipv3/app/modules/anuncio_module/repositories/address_interface_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:hasura_connect/hasura_connect.dart';
 

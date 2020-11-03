@@ -3,13 +3,13 @@ import 'package:pipv3/app/modules/auth_module/repositories/auth_login_repository
 import 'package:pipv3/app/modules/auth_module/stores/auth_login_store.dart';
 import 'package:pipv3/app/modules/auth_module/views/auth_home_page.dart';
 import 'package:pipv3/app/modules/auth_module/views/auth_signin_page.dart';
-import 'package:pipv3/app/modules/auth_module/views/reg_anuncio_page.dart';
+import 'package:pipv3/app/modules/anuncio_module/views/cad_anuncio_main_page.dart';
 import 'package:pipv3/app/services/shared_preference_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'modules/auth_module/repositories/address_repository.dart';
-import 'modules/auth_module/stores/anuncio_store.dart';
+import 'modules/anuncio_module/repositories/address_repository.dart';
+import 'modules/anuncio_module/stores/anuncio_store.dart';
 import 'modules/auth_module/views/auth_signup_page.dart';
 
 class AppWidget extends StatefulWidget {
@@ -48,7 +48,7 @@ class _AppWidgetState extends State<AppWidget> {
         title: 'PIP',
         //routes: routesApp,
         routes: {
-          '/': (context) => RegistrarAnuncio(),
+          '/': (context) => CadAnuncioMain(),
           //'/': (context) => AuthHomePage(),
           '/signin': (context) => AuthSignin(),
           '/signup': (context) => AuthSignup(),
