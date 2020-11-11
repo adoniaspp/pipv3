@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pipv3/app/modules/anuncio_module/models/AnuncioModel.dart';
+import 'package:provider/provider.dart';
 
 class CadAnuncioTipoAnuncio extends StatefulWidget {
   @override
@@ -9,25 +11,41 @@ class _CadAnuncioTipoAnuncioState extends State<CadAnuncioTipoAnuncio> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GridView.count(
-        crossAxisCount: 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          InkWell(
-            onTap: () {
-              print("olá 1");
-            },
-            child: Image.network(
-                "https://www.realestate.com.au/blog/images/800x450-fit,progressive/2018/01/12113253/capi_85dab0336e0fbceec553b561e8aa87cd_b19c9de7f91176d7817d28f2979cefed.jpeg",
-                scale: 2.0,
-                ),
+          Flexible(
+            flex: 2,
+            child: GestureDetector(onTap: () {
+              context.read<AnuncioModel>().selectButton1();    
+            }, child:
+              AnimatedContainer(
+                duration: Duration(seconds: 1),
+                alignment: Alignment.center,
+                child: Text("Venda"),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: context.watch<AnuncioModel>().colorButton1,
+                        width: context.watch<AnuncioModel>().borderButton1
+                        )),
+              ),
+            ),
           ),
-          InkWell(
-            onTap: () {
-              print("olá 2");
-            },
-            child: Image.network(
-                "https://www.realestate.com.au/blog/images/800x450-fit,progressive/2018/01/12113253/capi_85dab0336e0fbceec553b561e8aa87cd_b19c9de7f91176d7817d28f2979cefed.jpeg"),
-          )
+          Flexible(
+            flex: 2,
+            child: GestureDetector(onTap: () {
+              context.read<AnuncioModel>().selectButton2();             
+            }, child:AnimatedContainer(
+                duration: Duration(seconds: 1),
+                alignment: Alignment.center,
+                child: Text("Aluguel"),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: context.watch<AnuncioModel>().colorButton2,
+                        width: context.watch<AnuncioModel>().borderButton2)),
+              ),
+            ),
+          ),
         ],
       ),
     );
